@@ -23,3 +23,33 @@ export class UserSchema extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }
+
+export class ClientSchema extends BaseModel {
+  static $columns = [
+    'cpf',
+    'createdAt',
+    'email',
+    'favoriteColor',
+    'fullName',
+    'id',
+    'notes',
+    'updatedAt',
+  ] as const
+  $columns = ClientSchema.$columns
+  @column()
+  declare cpf: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare email: string
+  @column()
+  declare favoriteColor: string
+  @column()
+  declare fullName: string
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare notes: string | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}

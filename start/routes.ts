@@ -24,7 +24,14 @@ router
     router.get('/', [controllers.Clients, 'index']).as('home')
     router.get('login', [controllers.Session, 'create'])
     router.post('login', [controllers.Session, 'store'])
+    router.get('/clients/create', [controllers.Clients, 'create']).as('clients.create')
+    router.post('/clients/store', [controllers.Clients, 'store']).as('clients.store')
+    router.get('/clients/success', [controllers.Clients, 'success']).as('clients.success')
   })
 
-
+router
+  .group(() => {
+    router.get('/clients', [controllers.Clients, 'index']).as('clients.index')
+  })
+  .use(middleware.auth())
 
