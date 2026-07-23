@@ -2,6 +2,7 @@ FROM node:lts-bookworm-slim AS base
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+ENV CI=true
 RUN corepack enable
 
 FROM base AS deps
@@ -19,6 +20,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=build /app/build ./
+RUN pnpm install --frozen-lockfile --prod
 
 COPY docker-entrypoint.js ./
 
