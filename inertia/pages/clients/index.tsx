@@ -12,6 +12,7 @@ import {
   Pagination,
 } from '@heroui/react'
 
+import { Link } from '@adonisjs/inertia/react'
 import { InertiaProps } from '~/types'
 import { Data } from '@generated/data'
 import { formatCPF, debounce, getPageNumbers } from '~/util'
@@ -116,6 +117,9 @@ export default function ClientsIndex({ clients, searchTerm, flash }: PageProps) 
         </div>
 
         <div className="flex items-center gap-3">
+          <Link route="clients.create" className="button button--outline">
+            Cadastrar
+          </Link>
           <Button type="button" className="button button--primary" onPress={handleGenerateLink}>
             Gerar link de cadastro
           </Button>

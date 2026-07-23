@@ -34,8 +34,9 @@ export default class ClientsController {
     return response.redirect().back()
   }
 
-  async create({ inertia, request }: HttpContext) {
-    if (!request.hasValidSignature()) {
+  async create({ inertia, request, auth }: HttpContext) {
+    const isLoggedIn = await auth.use('web').check()
+    if (!isLoggedIn && !request.hasValidSignature()) {
       return inertia.render('clients/invalid_link', {})
     }
 
@@ -46,8 +47,9 @@ export default class ClientsController {
     return inertia.render('clients/create', { action: storeUrl })
   }
 
-  async store({ inertia, request, session, response }: HttpContext) {
-    if (!request.hasValidSignature()) {
+  async store({ inertia, request, session, response, auth }: HttpContext) {
+    const isLoggedIn = await auth.use('web').check()
+    if (!isLoggedIn && !request.hasValidSignature()) {
       return inertia.render('clients/invalid_link', {})
     }
 

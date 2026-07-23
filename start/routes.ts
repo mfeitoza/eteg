@@ -21,8 +21,8 @@ router.get('/logo.png', async ({ response }) => {
 
 router
   .group(() => {
-    router.get('/', [controllers.Home, 'index']).as('home')
-    router.get('login', [controllers.Session, 'create']).as('session.create')
+    router.get('/', [controllers.Home, 'index']).as('home').use(middleware.guest())
+    router.get('login', [controllers.Session, 'create']).as('session.create').use(middleware.guest())
     router.post('login', [controllers.Session, 'store'])
     router.get('/clients/create', [controllers.Clients, 'create']).as('clients.create')
     router.post('/clients/store', [controllers.Clients, 'store']).as('clients.store')
