@@ -11,7 +11,7 @@ import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
 
 createInertiaApp({
-  title: (title) => (title ? `${title} - ${appName}` : appName),
+  title: (title) => (title ? `${appName} - ${title}` : appName),
   resolve: (name) => {
     return resolvePageComponent(
       `./pages/${name}.tsx`,

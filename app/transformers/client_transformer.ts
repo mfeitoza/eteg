@@ -1,5 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers'
-import Client from '#models/client'
+import type Client from '#models/client'
 
 export default class ClientTransformer extends BaseTransformer<Client> {
   toObject() {

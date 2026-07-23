@@ -25,10 +25,14 @@ export default class ClientsController {
   }
 
   async generateLink({ response, session }: HttpContext) {
-    const signedUrl = signedUrlFor('clients.create', {}, {
-      expiresIn: '24h',
-      prefixUrl: appUrl,
-    })
+    const signedUrl = signedUrlFor(
+      'clients.create',
+      {},
+      {
+        expiresIn: '24h',
+        prefixUrl: appUrl,
+      }
+    )
 
     session.flash('generatedLink', signedUrl)
     return response.redirect().back()
@@ -40,9 +44,13 @@ export default class ClientsController {
       return inertia.render('clients/invalid_link', {})
     }
 
-    const storeUrl = signedUrlFor('clients.store', {}, {
-      expiresIn: '12h',
-    })
+    const storeUrl = signedUrlFor(
+      'clients.store',
+      {},
+      {
+        expiresIn: '12h',
+      }
+    )
 
     return inertia.render('clients/create', { action: storeUrl })
   }

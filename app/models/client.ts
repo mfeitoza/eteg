@@ -1,4 +1,3 @@
 import { ClientSchema } from '#database/schema'
 
-export default class Client extends ClientSchema {
-}
+export default class Client extends ClientSchema {}

@@ -8,7 +8,16 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class ClientSchema extends BaseModel {
-  static $columns = ['cpf', 'createdAt', 'email', 'favoriteColor', 'fullName', 'id', 'notes', 'updatedAt'] as const
+  static $columns = [
+    'cpf',
+    'createdAt',
+    'email',
+    'favoriteColor',
+    'fullName',
+    'id',
+    'notes',
+    'updatedAt',
+  ] as const
   $columns = ClientSchema.$columns
   @column()
   declare cpf: string
