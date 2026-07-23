@@ -19,7 +19,6 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=build /app/build ./
-RUN pnpm install --prod --frozen-lockfile
 
 COPY docker-entrypoint.js ./
 
