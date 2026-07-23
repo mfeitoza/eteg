@@ -7,6 +7,27 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class ClientSchema extends BaseModel {
+  static $columns = ['cpf', 'createdAt', 'email', 'favoriteColor', 'fullName', 'id', 'notes', 'updatedAt'] as const
+  $columns = ClientSchema.$columns
+  @column()
+  declare cpf: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare email: string
+  @column()
+  declare favoriteColor: string
+  @column()
+  declare fullName: string
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare notes: string | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class UserSchema extends BaseModel {
   static $columns = ['createdAt', 'email', 'fullName', 'id', 'password', 'updatedAt'] as const
   $columns = UserSchema.$columns
@@ -22,34 +43,4 @@ export class UserSchema extends BaseModel {
   declare password: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
-}
-
-export class ClientSchema extends BaseModel {
-  static $columns = [
-    'cpf',
-    'createdAt',
-    'email',
-    'favoriteColor',
-    'fullName',
-    'id',
-    'notes',
-    'updatedAt',
-  ] as const
-  $columns = ClientSchema.$columns
-  @column()
-  declare cpf: string
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime
-  @column()
-  declare email: string
-  @column()
-  declare favoriteColor: string
-  @column()
-  declare fullName: string
-  @column({ isPrimary: true })
-  declare id: string
-  @column()
-  declare notes: string | null
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime
 }

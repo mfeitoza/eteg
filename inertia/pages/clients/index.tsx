@@ -9,30 +9,29 @@ import {
   Button,
   Input,
   Modal,
+  Pagination,
 } from '@heroui/react'
 
 import { InertiaProps } from '~/types'
 import { Data } from '@generated/data'
-import { formatCPF } from '~/util'
+import { formatCPF, debounce, getPageNumbers } from '~/util'
 
-type PageProps = InertiaProps<{ clients: Data.Client[]; searchTerm: string }>
+type PageProps = InertiaProps<{
+  clients: {
+    data: Data.Client[]
+    metadata: {
+      total: number
+      perPage: number
+      currentPage: number
+      lastPage: number
+      firstPage: number
+    }
+  }
+  searchTerm: string
+}>
 
-export interface RainbowColor {
-  name: string
-  code: string
-}
+import { COLOR_PRESETS } from '#constants/colors'
 
-export const COLOR_PRESETS: RainbowColor[] = [
-  { name: 'Vermelho', code: '#FF0000' },
-  { name: 'Laranja', code: '#FF7F00' },
-  { name: 'Amarelo', code: '#FFFF00' },
-  { name: 'Verde', code: '#00FF00' },
-  { name: 'Azul', code: '#0000FF' },
-  { name: 'Anil', code: '#4B0082' },
-  { name: 'Violeta', code: '#8B00FF' },
-] as const
-
-// Helper: Gera as iniciais do nome do cliente
 export function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/)
   if (parts.length === 0 || !parts[0]) return 'CL'
@@ -40,27 +39,27 @@ export function getInitials(name: string): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
 }
 
-function debounce<T extends (...args: any[]) => void>(
-  func: T,
-  delay: number
-): (...args: Parameters<T>) => void {
-  let timeoutId: ReturnType<typeof setTimeout> | null = null
-
-  return function (this: any, ...args: Parameters<T>) {
-    if (timeoutId) {
-      clearTimeout(timeoutId)
-    }
-    timeoutId = setTimeout(() => {
-      func.apply(this, args)
-    }, delay)
-  }
-}
-
 export default function ClientsIndex({ clients, searchTerm, flash }: PageProps) {
   const router = useRouter()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [generatedLink, setGeneratedLink] = useState('')
   const [copied, setCopied] = useState(false)
+
+  const handlePageChange = (page: number) => {
+    router.visit(
+      {
+        route: 'clients.index',
+      },
+      {
+        data: {
+          q: searchTerm,
+          page,
+        },
+        preserveState: true,
+        preserveScroll: true,
+      }
+    )
+  }
 
   useEffect(() => {
     if (flash?.generatedLink) {
@@ -150,7 +149,7 @@ export default function ClientsIndex({ clients, searchTerm, flash }: PageProps) 
               <Table.Column>Observações</Table.Column>
             </Table.Header>
             <Table.Body>
-              {clients.map((client) => {
+              {clients.data.map((client) => {
                 const currentColor = getColorByCode(client.favoriteColor)
                 return (
                   <Table.Row key={client.id}>
@@ -193,7 +192,64 @@ export default function ClientsIndex({ clients, searchTerm, flash }: PageProps) 
         </Table.ScrollContainer>
       </Table>
 
-      {/* Modal de Link Temporário de Cadastro */}
+      {clients.metadata.total > 0 && (
+        <div className="mt-6 flex items-center justify-between">
+          <Pagination className="w-full flex items-center justify-between">
+            <Pagination.Summary>
+              Exibindo{' '}
+              {Math.min(
+                (clients.metadata.currentPage - 1) * clients.metadata.perPage + 1,
+                clients.metadata.total
+              )}
+              -
+              {Math.min(
+                clients.metadata.currentPage * clients.metadata.perPage,
+                clients.metadata.total
+              )}{' '}
+              de {clients.metadata.total} clientes
+            </Pagination.Summary>
+            <Pagination.Content>
+              <Pagination.Item>
+                <Pagination.Previous
+                  isDisabled={clients.metadata.currentPage <= 1}
+                  onPress={() => handlePageChange(clients.metadata.currentPage - 1)}
+                >
+                  <Pagination.PreviousIcon />
+                  <span>Anterior</span>
+                </Pagination.Previous>
+              </Pagination.Item>
+
+              {getPageNumbers(clients.metadata.currentPage, clients.metadata.lastPage).map(
+                (item, idx) => (
+                  <Pagination.Item key={idx}>
+                    {item === 'ellipsis' ? (
+                      <Pagination.Ellipsis />
+                    ) : (
+                      <Pagination.Link
+                        isActive={item === clients.metadata.currentPage}
+                        onPress={() => handlePageChange(item)}
+                      >
+                        {item}
+                      </Pagination.Link>
+                    )}
+                  </Pagination.Item>
+                )
+              )}
+
+              <Pagination.Item>
+                <Pagination.Next
+                  isDisabled={clients.metadata.currentPage >= clients.metadata.lastPage}
+                  onPress={() => handlePageChange(clients.metadata.currentPage + 1)}
+                >
+                  <span>Próximo</span>
+                  <Pagination.NextIcon />
+                </Pagination.Next>
+              </Pagination.Item>
+            </Pagination.Content>
+          </Pagination>
+        </div>
+      )}
+
       <Modal>
         <Modal.Backdrop isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
           <Modal.Container>

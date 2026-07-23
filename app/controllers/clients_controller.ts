@@ -8,14 +8,18 @@ import ClientTransformer from '#transformers/client_transformer'
 export default class ClientsController {
   async index({ inertia, request }: HttpContext) {
     const searchTerm: string = request.input('q', '')
+    const page: number = request.input('page', 1)
+    const limit: number = 10
 
     const clients = await Client.query()
       .orWhere('full_name', 'ilike', `%${searchTerm}%`)
       .orWhere('cpf', 'ilike', `%${searchTerm}%`)
       .orWhere('email', 'ilike', `%${searchTerm}%`)
+      .orderBy('full_name', 'asc')
+      .paginate(page, limit)
 
     return inertia.render('clients/index', {
-      clients: ClientTransformer.transform(clients),
+      clients: ClientTransformer.paginate(clients.all(), clients.getMeta()),
       searchTerm: searchTerm,
     })
   }

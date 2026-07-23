@@ -11,7 +11,7 @@ import {
   ColorSwatchPicker,
   parseColor,
 } from '@heroui/react'
-import { COLOR_PRESETS } from './index'
+import { COLOR_PRESETS } from '#constants/colors'
 import { formatCPF } from '~/util'
 import { InertiaProps } from '~/types'
 
