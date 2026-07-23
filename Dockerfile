@@ -1,21 +1,25 @@
 FROM node:lts-bookworm-slim AS base
 
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
 FROM base AS deps
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
 
 FROM deps AS build
 WORKDIR /app
 COPY . .
-RUN node ace build
+RUN pnpm build
 
 FROM base AS production
 WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=build /app/build ./
-RUN npm ci --omit=dev
+RUN pnpm install --prod --frozen-lockfile
 
 COPY docker-entrypoint.js ./
 
