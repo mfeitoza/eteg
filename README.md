@@ -61,7 +61,13 @@ Aplicação web desenvolvida para gerenciamento e cadastro de clientes, contando
    node ace migration:run
    ```
 
-4. **Iniciar o servidor de desenvolvimento:**
+4. **Opcional efetuar o seed do banco de dados:**
+
+   ```bash
+   node ace db:seed
+   ```
+
+5. **Iniciar o servidor de desenvolvimento:**
    ```bash
    pnpm dev
    ```
