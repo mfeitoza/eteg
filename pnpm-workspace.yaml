@@ -3,4 +3,6 @@ allowBuilds:
   better-sqlite3: true
   esbuild: true
 onlyBuiltDependencies:
+  - '@swc/core'
   - better-sqlite3
+  - esbuild
