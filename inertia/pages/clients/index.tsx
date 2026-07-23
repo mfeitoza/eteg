@@ -170,11 +170,15 @@ export default function ClientsIndex({ clients, searchTerm, flash }: PageProps) 
                         </div>
                       </div>
                     </Table.Cell>
-                    <Table.Cell className="font-mono text-slate-600 text-xs font-medium">
-                      {formatCPF(client.cpf)}
+                    <Table.Cell>
+                      <span className="font-mono text-slate-600 text-xs font-medium">
+                        {formatCPF(client.cpf)}
+                      </span>
                     </Table.Cell>
-                    <Table.Cell className="text-slate-600">{client.email}</Table.Cell>
-                    <Table.Cell className="flex items-center gap-2">
+                    <Table.Cell>
+                      <span className="text-slate-600 text-xs lowercase">{client.email}</span>
+                    </Table.Cell>
+                    <Table.Cell>
                       {currentColor ? (
                         <ColorSwatch
                           aria-label={currentColor.name}
@@ -185,8 +189,10 @@ export default function ClientsIndex({ clients, searchTerm, flash }: PageProps) 
                         <ColorSwatch aria-label="Sem cor" color="rgba(4, 133, 247, 0)" size="xs" />
                       )}
                     </Table.Cell>
-                    <Table.Cell className="text-slate-500 max-w-xs truncate text-xs">
-                      {client.notes || 'Sem observações'}
+                    <Table.Cell>
+                      <span className="text-slate-500 max-w-xs truncate text-xs">
+                        {client.notes || 'Sem observações'}
+                      </span>
                     </Table.Cell>
                   </Table.Row>
                 )
