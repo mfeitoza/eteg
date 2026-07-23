@@ -1,4 +1,3 @@
-import { Link } from '@adonisjs/inertia/react'
 import { Card } from '@heroui/react'
 
 export default function ClientSuccess() {

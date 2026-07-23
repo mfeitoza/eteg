@@ -30,6 +30,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
       flash: ctx.inertia.always({
         error,
         success,
+        generatedLink: session?.flashMessages.get('generatedLink') as string,
       }),
       user: ctx.inertia.always(auth?.user ? UserTransformer.transform(auth.user) : undefined),
     }
@@ -47,5 +48,5 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
 
 declare module '@adonisjs/inertia/types' {
   type MiddlewareSharedProps = InferSharedProps<InertiaMiddleware>
-  export interface SharedProps extends MiddlewareSharedProps {}
+  export interface SharedProps extends MiddlewareSharedProps { }
 }

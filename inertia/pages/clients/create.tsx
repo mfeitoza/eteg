@@ -12,9 +12,12 @@ import {
   parseColor,
 } from '@heroui/react'
 import { COLOR_PRESETS } from './index'
-import { formatCPF } from '../../util'
+import { formatCPF } from '~/util'
+import { InertiaProps } from '~/types'
 
-export default function ClientCreate() {
+type PageProps = InertiaProps<{ action: string }>
+
+export default function ClientCreate({ action }: PageProps) {
   const [cpf, setCpf] = useState('')
   const [favoriteColor, setFavoriteColor] = useState(parseColor(COLOR_PRESETS[0].code))
   const [notes, setNotes] = useState('')
@@ -35,7 +38,7 @@ export default function ClientCreate() {
       </div>
 
       <div className="mt-6 max-w-3xl">
-        <Form route="clients.store" className="space-y-4">
+        <Form action={action} method="POST" className="space-y-4">
           {({ errors, processing, clearErrors }) => (
             <>
               <TextField name="fullName" isInvalid={!!errors['fullName']}>

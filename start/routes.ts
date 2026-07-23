@@ -32,6 +32,7 @@ router
 router
   .group(() => {
     router.get('/clients', [controllers.Clients, 'index']).as('clients.index')
+    router.post('/clients/generate-link', [controllers.Clients, 'generateLink']).as('clients.generate_link')
     router.post('/logout', [controllers.Session, 'destroy']).as('session.destroy')
   })
   .use(middleware.auth())

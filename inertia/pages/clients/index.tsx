@@ -1,5 +1,15 @@
-import { Link, useRouter } from '@adonisjs/inertia/react'
-import { Table, ColorSwatch, SearchField, Label, Description } from '@heroui/react'
+import { useState, useEffect } from 'react'
+import { useRouter } from '@adonisjs/inertia/react'
+import {
+  Table,
+  ColorSwatch,
+  SearchField,
+  Label,
+  Description,
+  Button,
+  Input,
+  Modal,
+} from '@heroui/react'
 
 import { InertiaProps } from '~/types'
 import { Data } from '@generated/data'
@@ -46,11 +56,20 @@ function debounce<T extends (...args: any[]) => void>(
   }
 }
 
-export default function ClientsIndex({ clients, searchTerm }: PageProps) {
+export default function ClientsIndex({ clients, searchTerm, flash }: PageProps) {
   const router = useRouter()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [generatedLink, setGeneratedLink] = useState('')
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    if (flash?.generatedLink) {
+      setGeneratedLink(flash.generatedLink)
+      setIsModalOpen(true)
+    }
+  }, [flash?.generatedLink])
 
   const debouncedSearch = debounce((value: string) => {
-    console.log('search', value)
     router.visit(
       {
         route: 'clients.index',
@@ -65,10 +84,22 @@ export default function ClientsIndex({ clients, searchTerm }: PageProps) {
     )
   }, 500)
 
-  console.log('searchTerm', searchTerm)
-
   const getColorByCode = (code: string) => {
     return COLOR_PRESETS.find((c) => c.code.toLowerCase() === code.toLowerCase())
+  }
+
+  const handleGenerateLink = () => {
+    router.visit({
+      route: 'clients.generate_link',
+    })
+  }
+
+  const handleCopyLink = () => {
+    if (generatedLink) {
+      navigator.clipboard.writeText(generatedLink)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 3000)
+    }
   }
 
   return (
@@ -86,9 +117,9 @@ export default function ClientsIndex({ clients, searchTerm }: PageProps) {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link route="clients.create" className="button button--primary">
-            Novo cliente
-          </Link>
+          <Button type="button" className="button button--primary" onPress={handleGenerateLink}>
+            Gerar link de cadastro
+          </Button>
         </div>
       </div>
 
@@ -128,7 +159,10 @@ export default function ClientsIndex({ clients, searchTerm }: PageProps) {
                         <div>
                           <div className="font-semibold text-slate-900">{client.fullName}</div>
                           <div className="text-xs text-slate-400 font-normal">
-                            Cadastrado em {new Date(client.createdAt).toLocaleDateString('pt-BR')}
+                            Cadastrado em{' '}
+                            {client.createdAt
+                              ? new Date(client.createdAt).toLocaleDateString('pt-BR')
+                              : '-'}
                           </div>
                         </div>
                       </div>
@@ -158,6 +192,51 @@ export default function ClientsIndex({ clients, searchTerm }: PageProps) {
           </Table.Content>
         </Table.ScrollContainer>
       </Table>
+
+      {/* Modal de Link Temporário de Cadastro */}
+      <Modal>
+        <Modal.Backdrop isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+          <Modal.Container>
+            <Modal.Dialog>
+              <Modal.CloseTrigger />
+              <Modal.Header>
+                <Modal.Heading>Link temporário de cadastro</Modal.Heading>
+              </Modal.Header>
+              <Modal.Body className="space-y-4">
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Este link é <strong>válido por 24 horas</strong>. Envie para o cliente realizar o
+                  cadastro.
+                </p>
+
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="text"
+                      value={generatedLink}
+                      variant="secondary"
+                      readOnly
+                      className="w-full"
+                    />
+                    <Button type="button" onPress={handleCopyLink}>
+                      {copied ? 'Copiado!' : 'Copiar'}
+                    </Button>
+                  </div>
+                  {copied && (
+                    <p className="text-xs text-emerald-600 font-medium">
+                      ✓ Link copiado para a área de transferência!
+                    </p>
+                  )}
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button type="button" slot="close" className="button button--outline">
+                  Fechar
+                </Button>
+              </Modal.Footer>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
+      </Modal>
     </div>
   )
 }
