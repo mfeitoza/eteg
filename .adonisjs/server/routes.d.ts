@@ -4,6 +4,8 @@ type ParamValue = string | number | bigint | boolean
 
 export type ScannedRoutes = {
   ALL: {
+    'health_checks.live': { paramsTuple?: []; params?: {} }
+    'health_checks.ready': { paramsTuple?: []; params?: {} }
     'home': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
@@ -15,6 +17,8 @@ export type ScannedRoutes = {
     'session.destroy': { paramsTuple?: []; params?: {} }
   }
   GET: {
+    'health_checks.live': { paramsTuple?: []; params?: {} }
+    'health_checks.ready': { paramsTuple?: []; params?: {} }
     'home': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
     'clients.create': { paramsTuple?: []; params?: {} }
@@ -22,6 +26,8 @@ export type ScannedRoutes = {
     'clients.index': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
+    'health_checks.live': { paramsTuple?: []; params?: {} }
+    'health_checks.ready': { paramsTuple?: []; params?: {} }
     'home': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
     'clients.create': { paramsTuple?: []; params?: {} }

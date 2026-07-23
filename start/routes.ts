@@ -19,6 +19,10 @@ router.get('/logo.png', async ({ response }) => {
   return response.download('public/logo.png')
 })
 
+
+router.get('/health/live', [controllers.HealthChecks, 'live'])
+router.get('/health/ready', [controllers.HealthChecks, 'ready'])
+
 router
   .group(() => {
     router.get('/', [controllers.Home, 'index']).as('home').use(middleware.guest())

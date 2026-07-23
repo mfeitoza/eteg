@@ -5,6 +5,7 @@
 
 export const controllers = {
   Clients: () => import('#controllers/clients_controller'),
-  Session: () => import('#controllers/session_controller'),
+  HealthChecks: () => import('#controllers/health_checks_controller'),
   Home: () => import('#controllers/home_controller'),
+  Session: () => import('#controllers/session_controller'),
 }
