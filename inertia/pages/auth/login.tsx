@@ -1,4 +1,7 @@
+import type { ReactElement } from 'react'
+import type { Data } from '@generated/data'
 import { Form } from '@adonisjs/inertia/react'
+import BlankLayout from '~/layouts/blank'
 import { Card, Button, Input, Label, TextField, FieldError } from '@heroui/react'
 
 export default function Login() {
@@ -54,3 +57,5 @@ export default function Login() {
     </div>
   )
 }
+
+Login.layout = (page: ReactElement<Data.SharedProps>) => <BlankLayout>{page}</BlankLayout>
