@@ -32,6 +32,6 @@ router
 router
   .group(() => {
     router.get('/clients', [controllers.Clients, 'index']).as('clients.index')
+    router.post('/logout', [controllers.Session, 'destroy']).as('session.destroy')
   })
   .use(middleware.auth())
-
